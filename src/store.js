@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Stocks from './data/data';
+import randomValue from './helpers/randomValue';
 
 Vue.use(Vuex);
 
@@ -42,9 +43,13 @@ export default new Vuex.Store({
       state.money += value;
       company.quantity -= payload.quantity;
     },
-  },
-  actions: {
-
+    endDay(state) {
+      const newState = state.stockList.map(company => ({
+        ...company,
+        price: (company.price + randomValue(company.minPrice, company.maxPrice, company.companyName)),
+      }));
+      state.stockList = newState;
+    },
   },
 });
 /*
