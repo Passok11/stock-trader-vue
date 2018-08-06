@@ -1,19 +1,35 @@
 <template lang="pug">
   div
-    h1 Portfolio Page
-    ul
-      li(v-for="item in getPortfolio")
-        p {{item.name}} - {{ item.quantity }} - {{ item.price }}
-        form(v-on:submit.prevent="sellStocks(item, $event)")
-          input(type="number" name="quantity" value="0")
-          button(type="submit") Sell
+    .section
+      h1.title Portifolio
+      template(v-if="getPortfolio.length")
+        .columns(v-for="chunk in chunkStocks")
+          .column.is-one-third(v-for="stock in chunk")
+            .card
+              header.card-header
+                p.card-header-title {{ stock.name }}
+              .card-content
+                p.is-size-3 {{ convertCurrency(stock.price) }}
+                p.is-size-5 Quantity: {{ stock.quantity }}
+              .card-footer
+                form.card-footer-item.has-addons.field(v-on:submit.prevent="sellStocks(stock, $event)")
+                  .control
+                    input.input.control.is-medium(type="number" name="quantity" value="0")
+                  .control
+                    button.button.is-fullwidth.is-medium.is-primary.control(type="submit") Sell
+      h1.is-3(v-else) You don't have any stock!
 </template>
 
 <script>
+import _ from 'lodash/array';
+
 export default {
   computed: {
     getPortfolio() {
       return this.$store.getters.getPortfolio;
+    },
+    chunkStocks() {
+      return _.chunk(this.getPortfolio, 3);
     },
   },
   methods: {
@@ -28,6 +44,9 @@ export default {
         console.log('show don\'t have funds message');
       }
       e.target.quantity.value = 0;
+    },
+    convertCurrency(value) {
+      return `$${value}.00`;
     },
   },
 };

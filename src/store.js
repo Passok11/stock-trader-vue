@@ -46,7 +46,7 @@ export default new Vuex.Store({
     endDay(state) {
       const newState = state.stockList.map(company => ({
         ...company,
-        price: (company.price + randomValue(company.minPrice, company.maxPrice, company.companyName)),
+        price: (company.price + randomValue(company.minPrice, company.maxPrice)),
       }));
       state.stockList = newState;
     },

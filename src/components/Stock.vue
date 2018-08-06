@@ -1,15 +1,25 @@
 <template lang="pug">
   div
-    h1 Stock Page
-    ul
-      li(v-for="stock in stocks")
-        | {{ stock.name }} - {{ stock.price }}
-        form(v-on:submit.prevent="buyStocks(stock, $event)")
-          input(type="number" name="quantity" value="0")
-          button(type="submit") Buy
+    .section
+      h1.title Stock List
+      .columns(v-for="chunk in chunkStocks")
+        .column.is-one-third(v-for="stock in chunk")
+          .card
+            header.card-header
+              p.card-header-title {{ stock.name }}
+            .card-content
+              p.is-size-3 {{ convertCurrency(stock.price) }}
+            .card-footer
+              form.card-footer-item.has-addons.field(v-on:submit.prevent="buyStocks(stock, $event)")
+                .control
+                  input.input.control.is-medium(type="number" name="quantity" value="0")
+                .control
+                  button.button.is-fullwidth.is-medium.is-primary.control(type="submit") Buy
 </template>
 
 <script>
+import _ from 'lodash/array';
+
 export default {
   computed: {
     stocks() {
@@ -17,6 +27,9 @@ export default {
     },
     getMoney() {
       return this.$store.getters.getMoney;
+    },
+    chunkStocks() {
+      return _.chunk(this.stocks, 3);
     },
   },
   methods: {
@@ -32,6 +45,18 @@ export default {
       }
       e.target.quantity.value = 0;
     },
+    convertCurrency(value) {
+      return `$${value}.00`;
+    },
   },
 };
 </script>
+
+<style scoped>
+.card{
+  -webkit-box-shadow: 0px 0px 26px -9px rgba(0,0,0,0.18);
+  -moz-box-shadow: 0px 0px 26px -9px rgba(0,0,0,0.18);
+  box-shadow: 0px 0px 26px -9px rgba(0,0,0,0.18);
+}
+</style>
+
