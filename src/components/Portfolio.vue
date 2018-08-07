@@ -12,7 +12,9 @@
                 p.is-size-3 {{ convertCurrency(stock.price) }}
                 p.is-size-5 Quantity: {{ stock.quantity }}
               .card-footer
-                form.card-footer-item.has-addons.field(v-on:submit.prevent="sellStocks(stock, $event)")
+                form.card-footer-item.has-addons.field(
+                  v-on:submit.prevent="sellStocks(stock, $event)"
+                )
                   .control
                     input.input.control.is-medium(type="number" name="quantity" value="0")
                   .control

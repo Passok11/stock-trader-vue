@@ -9,6 +9,8 @@ export default new Vuex.Store({
   state: {
     stockList: Stocks,
     money: 8000,
+    savedState: '',
+    savedMoney: '',
   },
   getters: {
     getStocks(state) {
@@ -49,6 +51,14 @@ export default new Vuex.Store({
         price: (company.price + randomValue(company.minPrice, company.maxPrice)),
       }));
       state.stockList = newState;
+    },
+    saveState(state) {
+      state.savedMoney = state.money;
+      state.savedState = JSON.parse(JSON.stringify(state.stockList));
+    },
+    loadState(state) {
+      state.money = state.savedMoney;
+      state.stockList = JSON.parse(JSON.stringify(state.savedState));
     },
   },
 });
